@@ -1,0 +1,34 @@
+Mit Sommerzeit
+
+	Stuttgart			Berlin		Verschiebung S-B
+Datum	A-gang	U-gang	Länge	A-gang	U-gang	Länge	A-gang	     U-gang
+21.3.	6:24	18:37	12:13	6:06	18:20	12:14	+0:18	     +0:17
+21.6.	5:21	21:28	16:07	4:44	21:31	16:47	
+21.9.	7:09	19:21	12:12	6:52	19:05	12:13	+0:17	     +0:16
+21.12	8:14	16:28	 8:14	8:15	15:53	 7:38
+
+MEZ
+	Stuttgart			Berlin		Verschiebung S-B
+Datum	A-gang	U-gang	Länge	A-gang	U-gang	Länge	A-gang	     U-gang
+21.3.	6:24	18:37	12:13	6:06	18:20	12:14	+0:18	     +0:17
+21.6.	4:21	20:28	16:07	3:44	20:31	16:47	+0:37	     -0:03
+21.9.	6:09	18:21	12:12	5:52	18:05	12:13	+0:17	     +0:16
+21.12	8:14	16:28	 8:14	8:15	15:53	 7:38	-0:01	     +0:35
+
+MEZ, B+0:17
+	Stuttgart			Berlin		Verschiebung S-B
+Datum	A-gang	U-gang	Länge	A-gang	U-gang	Länge	A-gang	     U-gang
+21.3.	6:24	18:37	12:13	6:24	18:37	12:14	+0:00	     +0:00
+21.6.	4:21	20:28	16:07	4:01	20:48	16:47	+0:20	     -0:20
+21.9.	6:09	18:21	12:12	6:09	18:22	12:13	+0:00	     -0:01
+21.12	8:14	16:28	 8:14	8:32	16:10	 7:38	-0:18	     +0:18
+
+
+Aufgang:
+Ts = Tb + 0:17  - 0:19*cos(wt+phi)
+Untergang
+Ts = Tb + 0:17 + 0:19*cos(wt+phi)
+
+t [Tagen]
+w = 2*PI/365
+phi = 2*PI*10/365

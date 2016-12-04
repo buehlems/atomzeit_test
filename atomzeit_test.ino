@@ -2,22 +2,20 @@
 // unclear if needed
 #include <Arduino.h>
 
-#include <SPI.h>
-#include <Wire.h>
-#include <LiquidCrystal.h>
-#include <RTClib.h> 
-#include <Time.h>
+// #include <SPI.h>
+// #include <Wire.h>
+// #include <LiquidCrystal.h>
+// #include <RTClib.h> 
+// #include <Time.h>
 
 // needed
 #include <Ticker.h>
-
-
 #include "util.h"
 #include "atomzeit.h"
 
 #include "url.h"
 WiFi wifi(5000); // 5 sec is needed to find out that URL is not valid
-atomzeit atom(&wifi); // try later in loop
+Atomzeit atom(&wifi); // try later in loop
 
  // Cycle Timer
 Ticker tn(10L*60L*1000L); // SMA loop time
@@ -50,24 +48,38 @@ void loop(void){
 
   if(tn.check()){ // time is over
     util::println("********** new loop **********");
-    retCode=getAtomZeitFromWeb();
+    retCode=atom.getAtomzeitFromWeb();
     util::printfln("getAtomZeitFromWeb retCode=%d",retCode);
 
-    date date=atom.getDate();
-    hm time=atom.getTime();
-    unsignel long midnight=atom.getMillis0();
-    util::printfln("date: %d.%d.%d time: %d:%d",date.d,date.m,date.y,time.hh,time.mm);
-    util::printfln("midnight millis: %ld, current millis: %ld",midnight,millis());
-    util::printfln("millis since midnight: %10ld",millis()-midnight);
-    util::printfln("calculated from time:  %10ld",(long) (time.hh*60+time)*60000);
+    Date date=atom.getDate();
+    Hm time=atom.getTime();
+    unsigned long midnight=atom.getMillis0();
+    util::printfln("date: %d.%d.%d time: %d:%d",date.d,date.m,date.y,time.h,time.m);
+    util::printfln("midnight millis: %ld %lu, current millis: %lu",midnight,midnight,millis());
+    util::printfln("millis since midnight: %lu",millis()-midnight);
+    util::printfln("calculated from time:  %10lu",(long) (time.h*60+time.m)*60000);
 
     // get sunrise
-    minute sunrise(atom.getSunrise());
-    util::printfln("sunrise: %d:%d",sunrise.gethh(),sunrise.getmm());
+    Minute sunrise(atom.getSunrise());
+    util::printfln("sunrise BB: %d:%d",sunrise.geth(),sunrise.getm());
 
     // get sunset
-    minute sunset(atom.getSunset());
-    util::printfln("sunset: %d:%d",sunset.gethh(),sunset.getmm());
+    Minute sunset(atom.getSunset());
+    util::printfln("sunset BB: %d:%d",sunset.geth(),sunset.getm());
+
+    // next event
+    char eventType;
+    int minutes2Event=atom.getNextEvent(&eventType);
+    util::printfln("next event %d in %d minutes",eventType,minutes2Event);
+
+    // check millis since midnight
+    util::printfln("Check millis since midnight (1s delay between lines)");
+    long t;
+    for(int i=0; i<10; i++){
+       t=atom.millis();
+      util::printfln("millis since midnight: %ld",t);
+      delay(1000);
+    }
  
     util::println("waiting ...");
   }
