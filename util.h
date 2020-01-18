@@ -15,21 +15,30 @@ class util {
 	static void ascdump(unsigned char *buf, unsigned int len);
 	static void ascdump(char *buf, unsigned int len) {ascdump((unsigned char *)buf,len);}
         static void printf(const char *fmt, ...); // uses sprintf and buffer
+        static void printf(const __FlashStringHelper *fmt, ...); // uses sprintf and buffer
         static void printfln(const char *fmt, ...);
+        static void printfln(const __FlashStringHelper *fmt, ...);
         static void msg(const char c); // can be switched off with DEBUG
         static void msg(const char *fmt, ...); // can be switched off with DEBUG
+        static void msg(const __FlashStringHelper *fmt, ...); // can be switched off with DEBUG
 	static void msgln(const char *fmt, ...); // can be switched off with DEBUG
+	static void msgln(const __FlashStringHelper *fmt, ...); // can be switched off with DEBUG
 	static void msgln() { msgln(""); } // can be switched off with DEBUG
         static void print(const char c); 
         static void print(const char *str);
+        static void print(const __FlashStringHelper *strFlash);
         static void println(const char *str);
-        static void println() {println("");}
+	static void println(const __FlashStringHelper *strstrFlash);
+	static void println() {println("");}
         static void debug(const char *str, unsigned int uint); // prints uint as hex and dec
+        static void debug(const __FlashStringHelper *strFlash, unsigned int uint); // prints uint as hex and dec
         static void debugln(const char *str, unsigned int uint);
+        static void debugln(const __FlashStringHelper *strFlash, unsigned int uint);
         static void debug(const char c); // prints c as character/. and its hex value
         static void debugln(const char c);
 	static void endlessLoop(); // goes into an endless loop
 	static int strappend(char *str1, const char *str2, const int max);
+	static int strappend(char *str1, const __FlashStringHelper *strFlash2, const int max);
     private:
         const static size_t maxstr=128;
 	static void var_printf(const char *fmt, va_list ap);

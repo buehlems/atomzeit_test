@@ -57,7 +57,7 @@ void WiFi::cmd(const char *str){
   print("at+");
   println(str);
   #ifdef DEBUG_SEND
-  util::printfln("at+%s",str); // debug
+  util::printfln(F("at+%s"),str); // debug
   #endif
 }
 
@@ -81,7 +81,7 @@ void WiFi::cmd(const char *str,const int n){
   print("=");
   println(n);
 #ifdef DEBUG_SEND
-  util::printfln("at+%s=%d",str,n); // debug
+  util::printfln(F("at+%s=%d"),str,n); // debug
 #endif
 }
 
@@ -108,7 +108,7 @@ void WiFi::cmd(const char *str,const int n1, const int n2){
   print(",");
   println(n2);
   #ifdef DEBUG_SEND
-  util::printfln("at+%s=%d,%d",str,n1,n2); // debug
+  util::printfln(F("at+%s=%d,%d"),str,n1,n2); // debug
   #endif
 }
 
@@ -139,7 +139,7 @@ void WiFi::cmd(const char *str,const int n1, const int n2 , const int n3){
   println(n3);
 
 #ifdef DEBUG_SEND
-  util::printfln("at+%s=%d,%d,%d",str,n1,n2,n3);
+  util::printfln(F("at+%s=%d,%d,%d"),str,n1,n2,n3);
 #endif
 }
 
@@ -172,7 +172,7 @@ void WiFi::cmd(const char *str,const int n1, const int n2, const int n3, const i
   print(",");
   println(n4);
 #ifdef DEBUG_SEND
-  util::printfln("at+%s=%d,%d,%d,%d",str,n1,n2,n3,n4);
+  util::printfln(F("at+%s=%d,%d,%d,%d"),str,n1,n2,n3,n4);
 #endif
 }
 
@@ -205,7 +205,7 @@ void WiFi::cmd(const char *str1,const int n1, const int n2, const char *str2, co
   print(",");
   println(n4);
 #ifdef DEBUG_SEND
-  util::printfln("at+%s=%d,%d,%s,%d",str1,n1,n2,str2,n4);
+  util::printfln(F("at+%s=%d,%d,%s,%d"),str1,n1,n2,str2,n4);
 #endif
 }
 
@@ -227,24 +227,24 @@ bool WiFi::startCommandMode(void){
   char buffer[16]; //+ERR=-100\n\r\n\r
   int retcode=-1;
 
-  util::msgln("test mode");
+  util::msgln(F("test mode"));
   // test mode
   cmd(""); // blank command
   retcode=getResponse(buffer,16);
   if(retcode==RESPOK){
-    util::msgln("in command mode");
+    util::msgln(F("in command mode"));
     return true;
   }
 
-  util::msgln("response=%s message=%s",rc2Str(retcode),buffer);
-  util::println("enter command mode");
+  util::msgln(F("response=%s message=%s"),rc2Str(retcode),buffer);
+  util::println(F("enter command mode"));
   delay(2000);
   for(int i=0; i<3; i++){
     write('+');
   }
   delay(600);
   retcode=getResponse(buffer,16);
-  // util::msgln("response=%s message=%s",rc2Str(retcode),buffer); 
+  // util::msgln(F("response=%s message=%s"),rc2Str(retcode),buffer); 
   if(retcode==RESPOK){
     return true;
   }else{
@@ -270,7 +270,7 @@ int WiFi::flushIn(){
   int n=0;
   char c;
   if(available() > 0){
-    util::msg("WiFi::flush ");
+    util::msg(F("WiFi::flush "));
   }
   while(available() > 0){
     c=read();
@@ -278,7 +278,7 @@ int WiFi::flushIn(){
     n++;
   }
   if(n>0){
-    util::msgln("");
+    util::msgln();
   }
   return(n);
 }
@@ -356,7 +356,7 @@ int WiFi::getResponseRaw(char *buffer,size_t buflength,int mode){
 	    ovn=flushIn();
 	    n+=ovn;
 	  }else{
-	    util::msgln("overflow without flush"); // debug
+	    util::msgln(F("overflow without flush")); // debug
 	  }
 	  return RESPOVERFLOW;
 	}
@@ -431,7 +431,7 @@ int WiFi::getResponse(char *buffer, size_t length, int mode){
 
 /****f* 
   *  NAME
-  *    printResponse -- print response of WiFito Serial. Mainly for debug
+  *    printResponse -- print response of WiFi to Serial. Mainly for debug
   *  SYNOPSIS
   *    n = printResponse;
   *  FUNCTION
@@ -446,7 +446,7 @@ int WiFi::printResponse(){
   delay(10); // make sure response has arrived (could use timeout instead)
 
   int n=available();
-  util::msgln("received %d characters",n); 
+  util::msgln(F("received %d characters"),n); 
   while(available() > 0){
     char c=read();
     Serial.write(c);
@@ -624,7 +624,7 @@ int WiFi::scanSockets(int n1, int n2){
   for(int i=n1; i<=n2; i++){
     cmd("skstt",i); // get socket state
     int retcode=getResponse(buffer,sizeof(buffer));
-    // util::msgln("scanSockets: response=%s\nmessage=%s",rc2Str(retcode),buffer);
+    // util::msgln(F("scanSockets: response=%s\nmessage=%s"),rc2Str(retcode),buffer);
 
     if(retcode==RESPOK){
       activeSockets++;
@@ -664,27 +664,27 @@ int WiFi::closeSockets(int n1, int n2){
 
   // now looping through all selected sockets
   for(int i=n2; i>=n1; i--){
-    util::msgln("checking socket %d",i);
+    util::msgln(F("checking socket %d"),i);
     // checking socket
     cmd("skstt",i); // get status
     int retcode=getResponse(buffer,sizeof(buffer));
-    // util::msgln("closeSockets check: response=%s\nmessage=%s",rc2Str(retcode),buffer);
+    // util::msgln(F("closeSockets check: response=%s\nmessage=%s"),rc2Str(retcode),buffer);
     // printEc(buffer);
 
     // close socket if used
     if(retcode==RESPOK){
-      util::msgln("close socket %d",i);
+      util::msgln(F("close socket %d"),i);
       activeSockets++;
       cmd("skcls",i);
       retcode=getResponse(buffer,sizeof(buffer));
-      // util::msgln("closeSockets close: %d, response=%s\nmessage=%s",i,rc2Str(retcode),buffer);
+      // util::msgln(F("closeSockets close: %d, response=%s\nmessage=%s"),i,rc2Str(retcode),buffer);
     }else if(retcode==RESPERR){
       int ec=getNumber(buffer);
       if(ec != SOCKET_INACTIVE){
-	util::msgln("closeSockets message error: socket %d error=%s",i,ec2Str(ec));
+	util::msgln(F("closeSockets message error: socket %d error=%s"),i,ec2Str(ec));
       }
     }else{
-      util::msgln("closeSockets response error: socket %d error=%s",i,rc2Str(retcode));
+      util::msgln(F("closeSockets response error: socket %d error=%s"),i,rc2Str(retcode));
     }
   }
   return activeSockets;
@@ -740,7 +740,7 @@ int WiFi::closeSocket(WiFiSocket &s){
 void WiFi::printEc(char *buffer){
   int retcode=evalResponse(buffer);
   if(retcode==RESPERR)
-    util::msgln("%s",ec2Str(getNumber(buffer)));
+    util::msgln(F("%s"),ec2Str(getNumber(buffer)));
 }
 
 
@@ -768,9 +768,9 @@ int WiFi::init(int n1, int n2){
   for(i=0; i<10 && !commandMode; i++){
     commandMode=startCommandMode();
     if(commandMode){
-      util::println("WiFi::init: start command mode success");
+      util::println(F("WiFi::init: start command mode success"));
     }else{
-      util::println("WiFi::init: start command mode has failed");
+      util::println(F("WiFi::init: start command mode has failed"));
       delay(1000);
     }
   }
@@ -780,7 +780,7 @@ int WiFi::init(int n1, int n2){
   }
 
   int nsockets=closeSockets(n1,n2);
-  util::msgln("init: found and closed %d active sockets",nsockets);
+  util::msgln(F("init: found and closed %d active sockets"),nsockets);
   return nsockets;
 }
 
@@ -804,7 +804,7 @@ int WiFi::openSocket(int protocol, int mode, int timeout, int port){
   char buffer[bufsize];
   cmd("skct",protocol,mode,timeout,port);
   int retcode=getResponse(buffer,bufsize);
-  util::msgln("response=%s message=%s",rc2Str(retcode),buffer); // debug
+  util::msgln(F("response=%s message=%s"),rc2Str(retcode),buffer); // debug
   int n=getNumber(buffer);
   return n;
 }
@@ -830,7 +830,7 @@ int WiFi::openSocket(int protocol, int mode, const char *addr, int port){
 
   cmd("skct",protocol,mode,addr,port);
   int retcode=getResponse(buffer,bufsize);
-  util::msgln("response=%s message=%s",rc2Str(retcode),buffer); // debug
+  util::msgln(F("response=%s message=%s"),rc2Str(retcode),buffer); // debug
   util::hexdump((unsigned char *)buffer,strlen(buffer)); // debug
   int n=getNumber(buffer);
   return n;
@@ -905,13 +905,13 @@ int WiFi::getSocket(byte socket, const int mode, WiFiSocket &response){
   char buffer[bufsize];
 
   if(!available()){ // response available?
-    // util::msgln("Sending skstt"); // debug
+    // util::msgln(F("Sending skstt")); // debug
     cmd("skstt",socket); // no, get socket status
   }
 
   // get the mother socket. Usually something like +OK=1,1,"255.255.255.255",80,0
   int retcode=getResponse(buffer,bufsize,mode);
-  util::msgln("getSocket: response=%s message=%s",rc2Str(retcode),buffer);
+  util::msgln(F("getSocket: response=%s message=%s"),rc2Str(retcode),buffer);
   util::hexdump((unsigned char *)buffer,strlen(buffer));
 
   // return if socket end or WiFi responds with error
@@ -986,28 +986,28 @@ int WiFi::getClientSocket(byte socket, WiFiSocket &response){
   ******
 */
 void WiFi::printSocket(WiFiSocket *socket){
-  util::msgln("printSocket");
+  util::msgln(F("printSocket"));
   if(socket->mother == socket->socket){
-      util::msgln("mother socket");
+    util::msgln(F("mother socket"));
     }else{
-      util::msgln("child socket");
+    util::msgln(F("child socket"));
   }
-  util::msgln("mother: %3.3d",socket->mother);
-  util::msgln("socket: %3.3d",socket->socket);
-  util::msg("status: ");
+  util::msgln(F("mother: %3.3d"),socket->mother);
+  util::msgln(F("socket: %3.3d"),socket->socket);
+  util::msg(F("status: "));
   switch(socket->status) {
-  case 0           : util::msgln("disconnected"); break;
-  case 1           : util::msgln("detecting"); break;
-  case 2           : util::msgln("connected"); break;
-  default          : util::msgln("unknown %d",socket->status); break;
+  case 0           : util::msgln(F("disconnected")); break;
+  case 1           : util::msgln(F("detecting")); break;
+  case 2           : util::msgln(F("connected")); break;
+  default          : util::msgln(F("unknown %d"),socket->status); break;
   }
-  util::msg("host:");
+  util::msg(F("host:"));
   for(int i=0; i<4; i++){
-    util::msg(" %3.3d",socket->host[i]);
+    util::msg(F(" %3.3d"),socket->host[i]);
   }
   util::msgln();
-  util::msgln("port: %u",socket->port);
-  util::msgln("size: %u",socket->size);
+  util::msgln(F("port: %u"),socket->port);
+  util::msgln(F("size: %u"),socket->size);
 }
 
 /****f* 
@@ -1051,13 +1051,13 @@ int WiFi::receiveDataPrep(WiFiSocket &socket, const int size){
  
   int retcode=getResponse(buffer,bufsize);
 
-  // util::msgln("receiveDataPrep: response=%s\nmessage=%s",wifi.rc2Str(retcode),buffer); // debug
+  // util::msgln(F("receiveDataPrep: response=%s\nmessage=%s"),wifi.rc2Str(retcode),buffer); // debug
   // util::hexdump((unsigned char *)buffer,strlen(buffer)); // debug
 
   if(retcode == RESPERR || retcode == RESPOK){
     retcode=getNumber(buffer); // return the error code
     if(retcode<0){
-      	util::msgln("receiveDataPrep error: socket %d error=%s",socket.socket,ec2Str(retcode));
+      util::msgln(F("receiveDataPrep error: socket %d error=%s"),socket.socket,ec2Str(retcode));
     }
   }
   return (retcode);
@@ -1110,7 +1110,7 @@ int WiFi::receiveData(WiFiSocket &socket, char *buffer, const size_t bufsize, co
   int mode_int = mode | WiFiReadRaw;
   int ret=getResponseRaw(buffer,bytes2read,mode_int);
   if(ret==RESPTIMEOUT){
-    util::msgln("WiFi::receiveData2Buf: time out");
+    util::msgln(F("WiFi::receiveData2Buf: time out"));
   }
   if(ret >0) 
     socket.size -= bytes2read;
@@ -1147,7 +1147,7 @@ int WiFi::getData(WiFiSocket &socket,  char *buffer, const size_t bufsize, const
   }
 
   n=receiveDataPrep(socket,n);
-  // util::msgln("size: %d receive: %d\n",socket.size<bufsize ? socket.size:bufsize,n); // debug
+  // util::msgln(F("size: %d receive: %d\n"),socket.size<bufsize ? socket.size:bufsize,n); // debug
   if(n < 0) 
     return n;
   bytesReceived=receiveData(socket,buffer,n,mode);
@@ -1189,7 +1189,7 @@ int WiFi::sendData(const WiFiSocket &socket, const char *d1, const size_t n1, co
   // for some reason the wifi wants multiples of 6 bytes.
   int nf=(sendMod-n%sendMod)%sendMod; // will make 6 to 0
   int nall=n+nf; // all bytes to send
-  util::msgln("sendData: n1=%d n2=%d n=%d fill=%d total=%d", n1, n2, n, nf,nall); // debug
+  util::msgln(F("sendData: n1=%d n2=%d n=%d fill=%d total=%d"), n1, n2, n, nf,nall); // debug
 
   int retcode;
   int ec; // error code or number of bytes
@@ -1197,7 +1197,7 @@ int WiFi::sendData(const WiFiSocket &socket, const char *d1, const size_t n1, co
     cmd("sksnd",socket.socket,nall); // send data
     retcode=getResponse(buffer,bufsize);
 
-    // util::msgln("sendData: response=%s message=%s",rc2Str(retcode),buffer); // debug
+    // util::msgln(F("sendData: response=%s message=%s"),rc2Str(retcode),buffer); // debug
     // util::hexdump((unsigned char *)buffer,strlen(buffer)); // debug
 
     if(retcode==RESPTIMEOUT || retcode==RESPOVERFLOW)
@@ -1206,25 +1206,25 @@ int WiFi::sendData(const WiFiSocket &socket, const char *d1, const size_t n1, co
     ec=getNumber(buffer); // return the error code or the number of bytes to be sent
   
     if(retcode == RESPERR){
-      util::msgln("sendData error: socket %d error=%s",socket.socket,ec2Str(ec));
+      util::msgln(F("sendData error: socket %d error=%s"),socket.socket,ec2Str(ec));
       return retcode;
     }
 
   // retcode should now be RESPOK
   if(ec!=nall){
-    util::msgln("sendData error: cannot send all the data. Requested: %d allowed: %d",n,ec);
+    util::msgln(F("sendData error: cannot send all the data. Requested: %d allowed: %d"),n,ec);
     return RESPCANTSEND;
   }
 
-  if(n1>0) util::msg("sending data1:"); // debug
+  if(n1>0) util::msg(F("sending data1:")); // debug
   // ready to send data of buffer 1
   for(int i=0; i<n1; i++){
     write(d1[i]);
     util::msg(d1[i]); // debug
   }
-  if(n1>0) util::msgln(""); // debug
+  if(n1>0) util::msgln(); // debug
 
-  if(n2>0) util::msg("sending data2:"); // debug
+  if(n2>0) util::msg(F("sending data2:")); // debug
   // ready to send data of buffer 2
   for(int i=0; i<n2; i++){
     write(d2[i]);
@@ -1232,7 +1232,7 @@ int WiFi::sendData(const WiFiSocket &socket, const char *d1, const size_t n1, co
   }
 
   // send fill bytes
-  if(nf>0) util::msgln("sending %d fill bytes",nf); // debug
+  if(nf>0) util::msgln(F("sending %d fill bytes"),nf); // debug
   for(int i=0; i<nf; i++){
     write(' ');
   }
@@ -1292,8 +1292,8 @@ int WiFi::sendStringMulti(const WiFiSocket &socket, const char *string){
   int rest; // the part of string not sent
   int retcode=RESPOK;
 
-  util::msgln("*****");
-  util::msgln("sendStringMulti: n1=%d n2=%d total=%d",n1,n2,n);
+  util::msgln(F("*****"));
+  util::msgln(F("sendStringMulti: n1=%d n2=%d total=%d"),n1,n2,n);
   if(n1>0) util::hexdump(sendBuf,n1); 
   if(n2>0) util::hexdump(string,n2); 
 
@@ -1302,16 +1302,16 @@ int WiFi::sendStringMulti(const WiFiSocket &socket, const char *string){
     // calculate the real number to send
     rest=n%sendMod; // bytes to send next time
     n3=n2-rest; // bytes to send this time
-    util::msgln("sending %d out of %d characters",n1+n3,n);
+    util::msgln(F("sending %d out of %d characters"),n1+n3,n);
     retcode=sendData(socket,sendBuf,n1,string,n3);
     // copy rest of string to send buffer
     strcpy(sendBuf,string+n3);
   }else{
     // append string to send buffer
-    util::msgln("do NOT send %d characters",n);
+    util::msgln(F("do NOT send %d characters"),n);
     strcpy(sendBuf+n1,string);
   }
-  util::msgln("remaining bytes for next sendMulti: %d",strlen(sendBuf)); // debug
+  util::msgln(F("remaining bytes for next sendMulti: %d"),strlen(sendBuf)); // debug
   return retcode;
 }
 
@@ -1337,8 +1337,8 @@ int WiFi::sendStringTerminate(const WiFiSocket &socket){
   int n1=strlen(sendBuf);
   int retcode=RESPOK;
 
-  util::msgln("*****");
-  util::msgln("sendStringTerminate: send final string l=%d",n1);
+  util::msgln(F("*****"));
+  util::msgln(F("sendStringTerminate: send final string l=%d"),n1);
   util::hexdump(sendBuf,n1); // debug
 
   if(n1>0){
@@ -1348,12 +1348,12 @@ int WiFi::sendStringTerminate(const WiFiSocket &socket){
 
   #ifdef DEBUG_SEND
   debugbufSetEnd();
-  util::msg("sendStringTerminate: string sent:");
+  util::msg(F("sendStringTerminate: string sent:"));
   util::msgln(debugbuf);
   util::hexdump(debugbuf,strlen(debugbuf));
   debugbufReset();
   #endif
-  util::msgln(""); // debug
+  util::msgln(); // debug
 
   return retcode;
 }
@@ -1384,7 +1384,7 @@ int WiFi::printResponse(WiFiSocket *socket){
   while(socket->size>0){
     int n=socket->size<bufsize ? socket->size:bufsize;
     n=receiveDataPrep(*socket,n);
-    // util::msgln("size: %d receive: %d\n",socket->size<bufsize ? socket->size:bufsize,n); // debug
+    // util::msgln(F("size: %d receive: %d\n"),socket->size<bufsize ? socket->size:bufsize,n); // debug
     if(n < 0) 
       return n;
     retCode=receiveData(*socket,buffer,n,WiFiReadRaw);

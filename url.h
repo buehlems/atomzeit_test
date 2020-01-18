@@ -12,7 +12,7 @@ class Url {
   const static int stringNotFound= -3;   // could not find string in server response
 
   const static int closeAfterFind       = 0x01;
-  const static int removeSearchString   = 0x02;
+  const static int removeSearchString   = 0x02; // remove the search string and re-fill buffer
   const static int resetBuf             = 0x04;
 
   Url(WiFi *wifi);

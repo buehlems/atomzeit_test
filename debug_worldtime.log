@@ -1,0 +1,237 @@
+starting WiFi
+test mode
+in command mode
+WiFi::init: start command mode success
+checking socket 2
+checking socket 1
+checking socket 0
+init: found and closed 0 active sockets
+********** new loop **********
+********** getWorldTimeFromWeb /api/timezone/Europe/Berlin.txt **********
+open client socket worldtimeapi.org
+response=OK message=+OK=1
+
+
+ 2b 4f 4b 3d 31 0d 0a 0d 0a                      : +OK=1....
+done open client socket #=1
+getSocket: response=OK message=+OK=1,2,"52.210.86.137",80,0
+
+
+ 2b 4f 4b 3d 31 2c 32 2c 22 35 32 2e 32 31 30 2e : +OK=1,2,"52.210.
+ 38 36 2e 31 33 37 22 2c 38 30 2c 30 0d 0a 0d 0a : 86.137",80,0....
+*****
+sendStringMulti: n1=0 n2=4 total=4
+ 47 45 54 20                                     : GET 
+do NOT send 4 characters
+remaining bytes for next sendMulti: 4
+*****
+sendStringMulti: n1=4 n2=31 total=35
+ 47 45 54 20                                     : GET 
+ 2f 61 70 69 2f 74 69 6d 65 7a 6f 6e 65 2f 45 75 : /api/timezone/Eu
+ 72 6f 70 65 2f 42 65 72 6c 69 6e 2e 74 78 74    : rope/Berlin.txt
+sending 30 out of 35 characters
+sendData: n1=4 n2=26 n=30 fill=0 total=30
+sending data1:GET 
+sending data2:/api/timezone/Europe/Berli
+remaining bytes for next sendMulti: 5
+*****
+sendStringMulti: n1=5 n2=17 total=22
+ 6e 2e 74 78 74                                  : n.txt
+ 20 48 54 54 50 2f 31 2e 31 0d 0a 48 6f 73 74 3a :  HTTP/1.1..Host:
+ 20                                              :  
+sending 18 out of 22 characters
+sendData: n1=5 n2=13 n=18 fill=0 total=18
+sending data1:n.txt
+sending data2: HTTP/1.1
+Ho
+remaining bytes for next sendMulti: 4
+*****
+sendStringMulti: n1=4 n2=16 total=20
+ 73 74 3a 20                                     : st: 
+ 77 6f 72 6c 64 74 69 6d 65 61 70 69 2e 6f 72 67 : worldtimeapi.org
+sending 18 out of 20 characters
+sendData: n1=4 n2=14 n=18 fill=0 total=18
+sending data1:st: 
+sending data2:worldtimeapi.o
+remaining bytes for next sendMulti: 2
+*****
+sendStringMulti: n1=2 n2=4 total=6
+ 72 67                                           : rg
+ 0d 0a 0d 0a                                     : ....
+sending 6 out of 6 characters
+sendData: n1=2 n2=4 n=6 fill=0 total=6
+sending data1:rg
+sending data2:
+
+
+remaining bytes for next sendMulti: 0
+*****
+sendStringTerminate: send final string l=0
+                                                 : 
+
+check for server response #1
+getSocket: response=OK message=+OK=1,2,"52.210.86.137",80,0
+
+
+ 2b 4f 4b 3d 31 2c 32 2c 22 35 32 2e 32 31 30 2e : +OK=1,2,"52.210.
+ 38 36 2e 31 33 37 22 2c 38 30 2c 30 0d 0a 0d 0a : 86.137",80,0....
+wifi->getClientSocket retcode=OK
+printSocket
+mother socket
+mother: 001
+socket: 001
+status: connected
+host: 052 210 086 137
+port: 80
+size: 0
+check for server response #2
+getSocket: response=OK message=+OK=1,2,"52.210.86.137",80,639
+
+
+ 2b 4f 4b 3d 31 2c 32 2c 22 35 32 2e 32 31 30 2e : +OK=1,2,"52.210.
+ 38 36 2e 31 33 37 22 2c 38 30 2c 36 33 39 0d 0a : 86.137",80,639..
+ 0d 0a                                           : ..
+wifi->getClientSocket retcode=OK
+printSocket
+mother socket
+mother: 001
+socket: 001
+status: connected
+host: 052 210 086 137
+port: 80
+size: 639
+requestWebPage ok
+requestWebPage retCode=0
+findString retCode=0
+Buffer=2020-01-18T20:07:34.994903+01:00
+findString retCode=0
+Buffer=20:07:34.994903+01:00
+day_of_wee
+date: 18.1.2020 time: 20:7:34 utc: 1:0
+checking socket 1
+close socket 1
+number of sockets closed: 1
+getWorldTimeFromWeb retCode=0
+********** getSunriseSunsetFromWeb /json?lat=48.633690&lng=9.047205&formatted=0 **********
+open client socket api.sunrise-sunset.org
+response=OK message=+OK=1
+
+
+ 2b 4f 4b 3d 31 0d 0a 0d 0a                      : +OK=1....
+done open client socket #=1
+getSocket: response=OK message=+OK=1,2,"45.33.59.78",80,0
+
+
+ 2b 4f 4b 3d 31 2c 32 2c 22 34 35 2e 33 33 2e 35 : +OK=1,2,"45.33.5
+ 39 2e 37 38 22 2c 38 30 2c 30 0d 0a 0d 0a       : 9.78",80,0....
+*****
+sendStringMulti: n1=0 n2=4 total=4
+ 47 45 54 20                                     : GET 
+do NOT send 4 characters
+remaining bytes for next sendMulti: 4
+*****
+sendStringMulti: n1=4 n2=44 total=48
+ 47 45 54 20                                     : GET 
+ 2f 6a 73 6f 6e 3f 6c 61 74 3d 34 38 2e 36 33 33 : /json?lat=48.633
+ 36 39 30 26 6c 6e 67 3d 39 2e 30 34 37 32 30 35 : 690&lng=9.047205
+ 26 66 6f 72 6d 61 74 74 65 64 3d 30             : &formatted=0
+sending 48 out of 48 characters
+sendData: n1=4 n2=44 n=48 fill=0 total=48
+sending data1:GET 
+sending data2:/json?lat=48.633690&lng=9.047205&formatted=0
+remaining bytes for next sendMulti: 0
+*****
+sendStringMulti: n1=0 n2=17 total=17
+ 20 48 54 54 50 2f 31 2e 31 0d 0a 48 6f 73 74 3a :  HTTP/1.1..Host:
+ 20                                              :  
+sending 12 out of 17 characters
+sendData: n1=0 n2=12 n=12 fill=0 total=12
+sending data2: HTTP/1.1
+H
+remaining bytes for next sendMulti: 5
+*****
+sendStringMulti: n1=5 n2=22 total=27
+ 6f 73 74 3a 20                                  : ost: 
+ 61 70 69 2e 73 75 6e 72 69 73 65 2d 73 75 6e 73 : api.sunrise-suns
+ 65 74 2e 6f 72 67                               : et.org
+sending 24 out of 27 characters
+sendData: n1=5 n2=19 n=24 fill=0 total=24
+sending data1:ost: 
+sending data2:api.sunrise-sunset.
+remaining bytes for next sendMulti: 3
+*****
+sendStringMulti: n1=3 n2=4 total=7
+ 6f 72 67                                        : org
+ 0d 0a 0d 0a                                     : ....
+sending 6 out of 7 characters
+sendData: n1=3 n2=3 n=6 fill=0 total=6
+sending data1:org
+sending data2:
+
+remaining bytes for next sendMulti: 1
+*****
+sendStringTerminate: send final string l=1
+ 0a                                              : .
+sendData: n1=1 n2=0 n=1 fill=5 total=6
+sending data1:
+
+sending 5 fill bytes
+
+
+check for server response #1
+getSocket: response=ERR message=+ERR=-1
+
+
+ 2b 45 52 52 3d 2d 31 0d 0a 0d 0a                : +ERR=-1....
+wifi->getClientSocket retcode=ERR
+printSocket
+mother socket
+mother: 001
+socket: 001
+status: connected
+host: 045 033 059 078
+port: 80
+size: 0
+check for server response #2
+getSocket: response=OK message=+OK=1,0,"45.33.59.78",80,1015
+
+
+ 2b 4f 4b 3d 31 2c 30 2c 22 34 35 2e 33 33 2e 35 : +OK=1,0,"45.33.5
+ 39 2e 37 38 22 2c 38 30 2c 31 30 31 35 0d 0a 0d : 9.78",80,1015...
+ 0a                                              : .
+wifi->getClientSocket retcode=OK
+printSocket
+mother socket
+mother: 001
+socket: 001
+status: disconnected
+host: 045 033 059 078
+port: 80
+size: 1015
+requestWebPage ok
+requestWebPage retCode=0
+sunrise 8:8
+sunset 16:59
+checking socket 1
+close socket 1
+number of sockets closed: 1
+getSunriseSunsetFromWeb retCode=0
+date: 18.01.2020 time: 20:07:34 utc: 01:00
+sunrise BB: 08:08
+sunset BB:  16:59
+midnight millis: signed -72418284 unsigned 4222549012, current millis: 3545
+millis since midnight:   72421836
+calculated from time:    72420000
+next event 3 in 721 minutes
+Check millis since midnight (1s delay between lines)
+millis since midnight: 72421848
+millis since midnight: 72422851
+millis since midnight: 72423851
+millis since midnight: 72424851
+millis since midnight: 72425853
+millis since midnight: 72426853
+millis since midnight: 72427854
+millis since midnight: 72428854
+millis since midnight: 72429855
+millis since midnight: 72430855
+waiting ...

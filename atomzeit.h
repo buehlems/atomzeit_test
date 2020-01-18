@@ -15,11 +15,14 @@ class Atomzeit {
   const char ERROR=-1; // error, e.g. not initialized
   Atomzeit(WiFi *_w);
   ~Atomzeit();
+  int getWorldTimeFromWeb(const char *timezone);
+  int getSunriseSunsetFromWeb(const char* coordinates);
   int getAtomzeitFromWeb();
   int getSunrise() { return sunrise; }
   int getSunset()  { return sunset; }
   Date &getDate() { return date; }
-  Hm &getTime() { return time; }
+  Hms &getTime() { return time; }
+  Hm  &getUTC() { return utc; }
   unsigned long getMillis0();
   long millis();
   bool isInitialized();
@@ -36,8 +39,11 @@ class Atomzeit {
   int sunrise=-1; // sunrise today in minutes from midnight
   int sunset=-1;  // sunset today in minutes from midnight
   Date date;
-  Hm time;
+  Hms time;
+  Hm  utc;        // the offset to UTC (+ is Asia, - is America)
   unsigned long millis0=0; // milli counter at 0:00h
+  void replaceChar(char *str, char c, char r, unsigned int n=0);
+  int sunRiseSetGetTime(const char* type, Hm &t);
 
 };
 

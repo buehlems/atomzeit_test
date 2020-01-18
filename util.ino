@@ -75,12 +75,30 @@ void util::printf(const char *fmt, ...) {
    va_end(ap);
 }
 
+void util::printf(const __FlashStringHelper *fmt, ...) {
+   va_list ap;
+   String str(fmt);
+
+   va_start(ap,str.c_str());
+   var_printf(str.c_str(),ap);
+   va_end(ap);
+}
+
 void util::printfln(const char *fmt, ...) {
     va_list ap;
     va_start(ap,fmt);
     util::var_printf(fmt,ap);
     va_end(ap);
     util::var_printf("\n");
+}
+
+void util::printfln(const __FlashStringHelper *fmt, ...) {
+  String str(fmt);
+  va_list ap;
+  va_start(ap,str.c_str());
+  util::var_printf(str.c_str(),ap);
+  va_end(ap);
+  util::var_printf("\n");
 }
 
 void util::msg(const char c) {
@@ -98,6 +116,16 @@ void util::msg(const char *fmt, ...) {
   #endif /* DEBUG */
 }
 
+void util::msg(const __FlashStringHelper  *fmt, ...) {
+  #ifdef DEBUG
+    String str(fmt);
+    va_list ap;
+    va_start(ap,str.c_str());
+    util::var_printf(str.c_str(), ap);
+    va_end(ap);
+  #endif /* DEBUG */
+}
+
 void util::msgln(const char *fmt, ...) {
   #ifdef DEBUG
   va_list ap;
@@ -105,6 +133,17 @@ void util::msgln(const char *fmt, ...) {
    util::var_printf(fmt,ap);
    va_end(ap);
    util::var_printf("\n");
+  #endif /* DEBUG */
+}
+
+void util::msgln(const __FlashStringHelper *fmt, ...) {
+  #ifdef DEBUG
+    String str(fmt);
+    va_list ap;
+    va_start(ap,str.c_str());
+    util::var_printf(str.c_str(),ap);
+    va_end(ap);
+    util::var_printf("\n");
   #endif /* DEBUG */
 }
 
@@ -116,32 +155,65 @@ void util::print(const char *str) {
   Serial.print(str);
 }
 
+void util::print(const __FlashStringHelper *strFlash) {
+    String str(strFlash);
+    Serial.print(str.c_str());
+}
+
 void util::println(const char *str) {
   util::print(str);
   Serial.println();
 }
 
-void util::debug(const char *str, unsigned int uint) {
-  Serial.print(str);
-  Serial.print("0x");
-  Serial.print(uint, HEX);
-}
-
-void util::debugln(const char *str, unsigned int uint) {
-  util::debug(str,uint);
+void util::println(const __FlashStringHelper *strFlash) {
+  String str(strFlash);
+  util::print(str.c_str());
   Serial.println();
 }
 
+void util::debug(const char *str, unsigned int uint) {
+  #ifdef DEBUG
+  Serial.print(str);
+  Serial.print("0x");
+  Serial.print(uint, HEX);
+  #endif /* DEBUG */
+}
+
+void util::debug(const __FlashStringHelper *strFlash, unsigned int uint) {
+  #ifdef DEBUG
+  String str(strFlash);
+  util::debug(str.c_str(),uint);
+  #endif /* DEBUG */
+}
+
+void util::debugln(const char *str, unsigned int uint) {
+  #ifdef DEBUG
+  util::debug(str,uint);
+  Serial.println();
+  #endif /* DEBUG */
+}
+
+void util::debugln(const __FlashStringHelper *strFlash, unsigned int uint) {
+  #ifdef DEBUG
+  String str(strFlash);
+  util::debugln(str.c_str(),uint);
+  #endif /* DEBUG */
+}
+
 void util::debug(const char c){
+  #ifdef DEBUG
   char d;
   d=(c >= 0x20 && c <= 0x7e) ? c : '.';
   util::print(d);
   // util::debug(" ",(unsigned int)c);util::print("  ");
+  #endif /* DEBUG */
 }
 
 void util::debugln(const char c){
+  #ifdef DEBUG
   util::debug(c);
   Serial.println();
+  #endif /* DEBUG */
 }
 
 void util::endlessLoop(){
@@ -177,3 +249,9 @@ int util::strappend(char *str1, const char *str2, const int max) {
   }
   return(len);
 }
+
+int util::strappend(char *str1, const __FlashStringHelper *strFlash2, const int max) {
+  String str2(strFlash2);  
+  return(util::strappend(str1,str2.c_str(),max));
+}
+

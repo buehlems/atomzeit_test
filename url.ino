@@ -79,7 +79,7 @@ void Url::invalidateSocket(){
 int Url::closeConnection(){
     int retcode=wifi->closeSocket(socket.socket);
     invalidateSocket();
-    util::msgln("number of sockets closed: %d",retcode);
+    util::msgln(F("number of sockets closed: %d"),retcode);
     return retcode;
 }
 
@@ -104,15 +104,15 @@ int Url::waitForServerResponse(const int retries, const int waitDelay){
 
   // get server response
   for(int i=0; i<retries; i++){
-    util::msgln("check for server response #%d",i+1);
+    util::msgln(F("check for server response #%d"),i+1);
 
     retcode=wifi->getClientSocket(socket.socket,socket); // check socket and fill socket structure
 
-    util::msgln("wifi->getClientSocket retcode=%s",wifi->rc2Str(retcode));
+    util::msgln(F("wifi->getClientSocket retcode=%s"),wifi->rc2Str(retcode));
     wifi->printSocket(socket);
  
    if(retcode==RESPOK && socket.size>0){
-      util::printfln("requestWebPage ok");
+     util::printfln(F("requestWebPage ok"));
       gotResponse=true;
       break;
     }
@@ -145,19 +145,19 @@ int Url::waitForServerResponse(const int retries, const int waitDelay){
 int Url::requestWebPage(const char *server, const char* page){
   boolean gotResponse=false;
 
-  util::msgln("open client socket %s",server);
+  util::msgln(F("open client socket %s"),server);
   socket.socket=wifi->openSocket(0,0,server,80); // last number is port
   if(socket.socket<0){
-    util::msgln("client socket error=%s",wifi->ec2Str(socket.socket));
+    util::msgln(F("client socket error=%s"),wifi->ec2Str(socket.socket));
     return serverError;
   }else{
-    util::msgln("done open client socket #=%d",socket.socket);
+    util::msgln(F("done open client socket #=%d"),socket.socket);
   }
 
   // check socket and fill socket structure
   int retcode=wifi->getClientSocket(socket.socket,socket);
   if(retcode != RESPOK){
-    // util::msgln("wifi->getClientSocket retcode=%s",wifi->ec2Str(retcode)); // debug
+    // util::msgln(F("wifi->getClientSocket retcode=%s"),wifi->ec2Str(retcode)); // debug
     return serverError;
   }
 
@@ -201,8 +201,8 @@ int Url::findString_int(const char *sstr, const int mode){
   int matching=0; // number of matching characters
   const char htmlEnd[]="</HTML>"; // end of a html file
 
-  // util::printfln("findString search %s",sstr); // debug
-  // util::printfln("buffer at input *** %s ***",getBuf()); // debug
+  // util::printfln(F("findString search %s"),sstr); // debug
+  // util::printfln(F("buffer at input *** %s ***"),getBuf()); // debug
 
   if(mode&resetBuf){
     resetRespBuf();
@@ -222,24 +222,24 @@ int Url::findString_int(const char *sstr, const int mode){
       }
     }
     bytesRead=wifi->getData(socket,readBuf,readBufSize,WiFiReadRaw);
-    // util::printfln("findString getData try %d, got %d bytes", readBufSize, bytesRead); // debug
+    // util::printfln(F("findString getData try %d, got %d bytes"), readBufSize, bytesRead); // debug
     if(bytesRead<0){
       return stringNotFound;
     }
     readBuf[bytesRead]='\0'; // mark the end. There is always space for one more character
-    // util::msgln("buffer after getData=%s***",getBuf()); // debug
+    // util::msgln(F("buffer after getData=%s***"),getBuf()); // debug
     matching=matchString(respBuf,sstr,&begin);
-    // util::printfln("found %d matching bytes with search string",matching); // debug
+    // util::printfln(F("found %d matching bytes with search string"),matching); // debug
     // at least partial string found -> copy found part to beginning of buffer
     if(matching>0){
       //copy to beginning
       strcpy(respBuf,begin);
-      // util::msgln("buffer after copy search string to beginning=%s***",getBuf()); // debug
+      // util::msgln(F("buffer after copy search string to beginning=%s***"),getBuf()); // debug
       if(matching == strlen(sstr)){
 	if(mode & removeSearchString){
-	  // util::printfln("removeSearchString mode=%x removeSearchString=%x",mode,removeSearchString); // debug
+	  // util::printfln(F("removeSearchString mode=%x removeSearchString=%x"),mode,removeSearchString); // debug
 	  strcpy(respBuf,respBuf+strlen(sstr));
-	  // util::msgln("buffer after removeSearchString=%s***",getBuf()); // debug
+	  // util::msgln(F("buffer after removeSearchString=%s***"),getBuf()); // debug
 	}
 	found=true;
 	break;
@@ -332,7 +332,7 @@ int Url::matchString(const char *buf, const char *matchstr, char **begin){
   int n=0; // position in matchstr to match
   boolean found=false;
 
-  // util::printfln("matchString: find %s in %s",matchstr,buf); // debug
+  // util::printfln(F("matchString: find %s in %s"),matchstr,buf); // debug
 
   while(!found && current_1[n] != '\0'){
     // current position matches?

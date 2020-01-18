@@ -1,0 +1,137 @@
+starting WiFi
+test mode
+in command mode
+WiFi::init: start command mode success
+checking socket 2
+checking socket 1
+close socket 1
+checking socket 0
+init: found and closed 1 active sockets
+********** new loop **********
+********** getAtomzeitFromWeb **********
+open client socket www.atomzeit.eu
+response=OK message=+OK=1
+
+
+ 2b 4f 4b 3d 31 0d 0a 0d 0a                      : +OK=1....
+done open client socket #=1
+getSocket: response=OK message=+OK=1,2,"109.237.134.44",80,0
+
+
+ 2b 4f 4b 3d 31 2c 32 2c 22 31 30 39 2e 32 33 37 : +OK=1,2,"109.237
+ 2e 31 33 34 2e 34 34 22 2c 38 30 2c 30 0d 0a 0d : .134.44",80,0...
+ 0a                                              : .
+*****
+sendStringMulti: n1=0 n2=4 total=4
+ 47 45 54 20                                     : GET 
+do NOT send 4 characters
+remaining bytes for next sendMulti: 4
+*****
+sendStringMulti: n1=4 n2=1 total=5
+ 47 45 54 20                                     : GET 
+ 2f                                              : /
+do NOT send 5 characters
+remaining bytes for next sendMulti: 5
+*****
+sendStringMulti: n1=5 n2=17 total=22
+ 47 45 54 20 2f                                  : GET /
+ 20 48 54 54 50 2f 31 2e 31 0d 0a 48 6f 73 74 3a :  HTTP/1.1..Host:
+ 20                                              :  
+sending 18 out of 22 characters
+sendData: n1=5 n2=13 n=18 fill=0 total=18
+sending data1:GET /
+sending data2: HTTP/1.1
+Ho
+remaining bytes for next sendMulti: 4
+*****
+sendStringMulti: n1=4 n2=15 total=19
+ 73 74 3a 20                                     : st: 
+ 77 77 77 2e 61 74 6f 6d 7a 65 69 74 2e 65 75    : www.atomzeit.eu
+sending 18 out of 19 characters
+sendData: n1=4 n2=14 n=18 fill=0 total=18
+sending data1:st: 
+sending data2:www.atomzeit.e
+remaining bytes for next sendMulti: 1
+*****
+sendStringMulti: n1=1 n2=4 total=5
+ 75                                              : u
+ 0d 0a 0d 0a                                     : ....
+do NOT send 5 characters
+remaining bytes for next sendMulti: 5
+*****
+sendStringTerminate: send final string l=5
+ 75 0d 0a 0d 0a                                  : u....
+sendData: n1=5 n2=0 n=5 fill=1 total=6
+sending data1:u
+
+
+sending 1 fill bytes
+
+
+check for server response #1
+getSocket: response=ERR message=+ERR=-1
+
+
+ 2b 45 52 52 3d 2d 31 0d 0a 0d 0a                : +ERR=-1....
+wifi->getClientSocket retcode=ERR
+printSocket
+mother socket
+mother: 001
+socket: 001
+status: connected
+host: 109 237 134 044
+port: 80
+size: 0
+check for server response #2
+getSocket: response=OK message=+OK=1,2,"109.237.134.44",80,11376
+
+
+ 2b 4f 4b 3d 31 2c 32 2c 22 31 30 39 2e 32 33 37 : +OK=1,2,"109.237
+ 2e 31 33 34 2e 34 34 22 2c 38 30 2c 31 31 33 37 : .134.44",80,1137
+ 36 0d 0a 0d 0a                                  : 6....
+wifi->getClientSocket retcode=OK
+printSocket
+mother socket
+mother: 001
+socket: 001
+status: connected
+host: 109 237 134 044
+port: 80
+size: 11376
+requestWebPage ok
+requestWebPage retCode=0
+findString retCode=0
+Buffer= 18.01.2020 - 20:09 Uhr</b><br> 
+date: 18.%02hhd.1 time: 2020:20
+findString retCode=0
+Buffer=08:11 Uhr<br>Sonnenuntergang:16:
+sunrise Berlin: 8:11
+checking socket 1
+close socket 1
+number of sockets closed: 1
+findString retCode=0
+Buffer=16:23 Uhr
+</tr>
+</table>
+<hr nos
+sunset Berlin: 16:23
+getAtomZeitFromWeb retCode=0
+date: 18.01.2020 time: 20:09:00 utc: 00:00
+sunrise BB: 08:11
+sunset BB:  16:56
+midnight millis: signed -72533785 unsigned 4222433511, current millis: 6223
+millis since midnight:   72540016
+calculated from time:    72540000
+next event 3 in 722 minutes
+Check millis since midnight (1s delay between lines)
+millis since midnight: 72540028
+millis since midnight: 72541030
+millis since midnight: 72542031
+millis since midnight: 72543031
+millis since midnight: 72544033
+millis since midnight: 72545033
+millis since midnight: 72546034
+millis since midnight: 72547034
+millis since midnight: 72548034
+millis since midnight: 72549035
+waiting ...

@@ -34,7 +34,7 @@ void setup(void) {
     Serial.begin(115200); // debug 
 
     // start Wifi
-    util::println("starting WiFi");
+    util::println(F("starting WiFi"));
     wifi.init(); // start command mode and close active sockets
     tn.over();
 }
@@ -43,45 +43,52 @@ void setup(void) {
 void loop(void){
   int retCode=0;
   long t_rest=tn.rest();
-  // util::msgln("remaining time=%ld", t_rest);
+  // util::msgln(F("remaining time=%ld"), t_rest);
   // atomzeit atom(&wifi);
 
   if(tn.check()){ // time is over
-    util::println("********** new loop **********");
+    util::println(F("********** new loop **********"));
+
+    #define WORLD 1
+    #if WORLD == 0
     retCode=atom.getAtomzeitFromWeb();
     util::printfln("getAtomZeitFromWeb retCode=%d",retCode);
+    #else
+    retCode=atom.getWorldTimeFromWeb("/api/timezone/Europe/Berlin.txt");
+    // retCode=atom.getWorldTimeFromWeb("/api/timezone/America/Caracas.txt"); // to check negative UTC
+    util::printfln("getWorldTimeFromWeb retCode=%d",retCode);
+    retCode=atom.getSunriseSunsetFromWeb("/json?lat=48.633690&lng=9.047205&formatted=0"); // https://api.sunrise-sunset.org/json?lat=48.633690&lng=9.047205&formatted=0
+    util::printfln("getSunriseSunsetFromWeb retCode=%d",retCode);
+    #endif
 
     Date date=atom.getDate();
-    Hm time=atom.getTime();
-    unsigned long midnight=atom.getMillis0();
-    util::printfln("date: %d.%d.%d time: %d:%d",date.d,date.m,date.y,time.h,time.m);
-    util::printfln("midnight millis: %ld %lu, current millis: %lu",midnight,midnight,millis());
-    util::printfln("millis since midnight: %lu",millis()-midnight);
-    util::printfln("calculated from time:  %10lu",(long) (time.h*60+time.m)*60000);
-
-    // get sunrise
+    Hms time=atom.getTime();
+    Hm  utc=atom.getUTC();
     Minute sunrise(atom.getSunrise());
-    util::printfln("sunrise BB: %d:%d",sunrise.geth(),sunrise.getm());
-
-    // get sunset
     Minute sunset(atom.getSunset());
-    util::printfln("sunset BB: %d:%d",sunset.geth(),sunset.getm());
+    unsigned long midnight=atom.getMillis0();
+    util::printfln(F("date: %02d.%02d.%04d time: %02d:%02d:%02d utc: %02d:%02d"),date.d,date.m,date.y,time.h,time.m,time.s,utc.h,utc.m);
+    util::printfln(F("sunrise BB: %02d:%02d"),sunrise.geth(),sunrise.getm());
+    util::printfln(F("sunset BB:  %02d:%02d"),sunset.geth(),sunset.getm());
+    util::printfln(F("midnight millis: signed %ld unsigned %lu, current millis: %lu"),midnight,midnight,millis());
+    util::printfln(F("millis since midnight: %10lu"),millis()-midnight);
+    util::printfln(F("calculated from time:  %10lu"),(long) (time.h*60+time.m)*60000);
 
     // next event
     char eventType;
     int minutes2Event=atom.getNextEvent(&eventType);
-    util::printfln("next event %d in %d minutes",eventType,minutes2Event);
+    util::printfln(F("next event %d in %d minutes"),eventType,minutes2Event);
 
     // check millis since midnight
-    util::printfln("Check millis since midnight (1s delay between lines)");
+    util::printfln(F("Check millis since midnight (1s delay between lines)"));
     long t;
     for(int i=0; i<10; i++){
        t=atom.millis();
-      util::printfln("millis since midnight: %ld",t);
+       util::printfln(F("millis since midnight: %ld"),t);
       delay(1000);
     }
  
-    util::println("waiting ...");
+    util::println(F("waiting ..."));
   }
   t1.sleep();
 }
