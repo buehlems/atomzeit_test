@@ -14,7 +14,7 @@
 #include "atomzeit.h"
 
 #include "url.h"
-WiFi wifi(5000); // 5 sec is needed to find out that URL is not valid
+WiFi_TL wifi(5000); // 5 sec is needed to find out that URL is not valid
 Atomzeit atom(&wifi); // try later in loop
 
  // Cycle Timer

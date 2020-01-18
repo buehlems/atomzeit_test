@@ -1,6 +1,6 @@
 #include <Ticker.h>
 
-#include "WiFi.h"
+#include "Wifi_TL.h"
 #include "util.h"
 
 // states for get response
@@ -11,18 +11,18 @@
 
 /****f* 
   *  NAME
-  *    WiFi -- 
+  *    WiFi_TL -- 
   *  SYNOPSIS
-  *    WiFi wifi(200);
+  *    WiFi_TL wifi(200);
   *  FUNCTION
-  *    define WiFi
+  *    define WiFi_TL
   *  INPUTS
   *    to      - timeout in ms (default 1000)
   *  RESULT
   *    ---
    ******
 */
-WiFi::WiFi(unsigned int to) {
+WiFi_TL::WiFi_TL(unsigned int to) {
   timeout=to;
   sendBufReset();
 #ifdef DEBUG_SEND
@@ -30,10 +30,10 @@ WiFi::WiFi(unsigned int to) {
 #endif // DEBUG_SEND
 }
 
-WiFi::~WiFi(void) {
+WiFi_TL::~WiFi_TL(void) {
 }
 
-size_t WiFi::write(const char c){
+size_t WiFi_TL::write(const char c){
 #ifdef DEBUG_SEND
   add2debugbuf(c);
 #endif
@@ -53,7 +53,7 @@ size_t WiFi::write(const char c){
   *    ---
    ******
 */
-void WiFi::cmd(const char *str){
+void WiFi_TL::cmd(const char *str){
   print("at+");
   println(str);
   #ifdef DEBUG_SEND
@@ -75,7 +75,7 @@ void WiFi::cmd(const char *str){
   *    ---
    ******
 */
-void WiFi::cmd(const char *str,const int n){
+void WiFi_TL::cmd(const char *str,const int n){
   print("at+");
   print(str);
   print("=");
@@ -100,7 +100,7 @@ void WiFi::cmd(const char *str,const int n){
   *    ---
    ******
 */
-void WiFi::cmd(const char *str,const int n1, const int n2){
+void WiFi_TL::cmd(const char *str,const int n1, const int n2){
   print("at+");
   print(str);
   print("=");
@@ -128,7 +128,7 @@ void WiFi::cmd(const char *str,const int n1, const int n2){
   *    ---
    ******
 */
-void WiFi::cmd(const char *str,const int n1, const int n2 , const int n3){
+void WiFi_TL::cmd(const char *str,const int n1, const int n2 , const int n3){
   print("at+");
   print(str);
   print("=");
@@ -160,7 +160,7 @@ void WiFi::cmd(const char *str,const int n1, const int n2 , const int n3){
   *    ---
    ******
 */
-void WiFi::cmd(const char *str,const int n1, const int n2, const int n3, const int n4){
+void WiFi_TL::cmd(const char *str,const int n1, const int n2, const int n3, const int n4){
   print("at+");
   print(str);
   print("=");
@@ -193,7 +193,7 @@ void WiFi::cmd(const char *str,const int n1, const int n2, const int n3, const i
   *    ---
    ******
 */
-void WiFi::cmd(const char *str1,const int n1, const int n2, const char *str2, const int n4){
+void WiFi_TL::cmd(const char *str1,const int n1, const int n2, const char *str2, const int n4){
   print("at+");
   print(str1);
   print("=");
@@ -222,7 +222,7 @@ void WiFi::cmd(const char *str1,const int n1, const int n2, const char *str2, co
   *    true if success
    ******
 */
-bool WiFi::startCommandMode(void){
+bool WiFi_TL::startCommandMode(void){
   // test mode
   char buffer[16]; //+ERR=-100\n\r\n\r
   int retcode=-1;
@@ -266,11 +266,11 @@ bool WiFi::startCommandMode(void){
    ******
 */
 
-int WiFi::flushIn(){
+int WiFi_TL::flushIn(){
   int n=0;
   char c;
   if(available() > 0){
-    util::msg(F("WiFi::flush "));
+    util::msg(F("WiFi_TL::flush "));
   }
   while(available() > 0){
     c=read();
@@ -306,7 +306,7 @@ int WiFi::flushIn(){
    ******
 */
 
-int WiFi::getResponseRaw(char *buffer,size_t buflength,int mode){
+int WiFi_TL::getResponseRaw(char *buffer,size_t buflength,int mode){
   Ticker t((long)timeout);
   const char normalResponseEnd[]="\r\n\r\n";
   const char *socketResponseEnd=normalResponseEnd+2;
@@ -382,10 +382,10 @@ int WiFi::getResponseRaw(char *buffer,size_t buflength,int mode){
   *    RESPERR: message is error message (+ERR)
   *    RESPSOCKETEND: end of socket message (\r\n)
   *    RESPINVALID: no valid message. None of the above
-  *    also see Wifi.h for error codes (RESP...)
+  *    also see Wifi_TL.h for error codes (RESP...)
    ******
 */
-int WiFi::evalResponse(const char *buffer){
+int WiFi_TL::evalResponse(const char *buffer){
   if(strncmp(buffer,"+OK",3) == 0){
     return RESPOK;
   }
@@ -420,7 +420,7 @@ int WiFi::evalResponse(const char *buffer){
   *    RESPINVALID: no valid message. None of the above
    ******
 */
-int WiFi::getResponse(char *buffer, size_t length, int mode){
+int WiFi_TL::getResponse(char *buffer, size_t length, int mode){
   int status=getResponseRaw(buffer,length,mode);
   if(status != RESPCOMPLETE || status >= 0){
     return(status);
@@ -441,7 +441,7 @@ int WiFi::getResponse(char *buffer, size_t length, int mode){
   *    number of characters printed
   ******
 */
-int WiFi::printResponse(){
+int WiFi_TL::printResponse(){
 
   delay(10); // make sure response has arrived (could use timeout instead)
 
@@ -467,7 +467,7 @@ int WiFi::printResponse(){
   *    pointer to the first number character
   ******
 */
-const char *WiFi::searchNumber(const char *buffer){
+const char *WiFi_TL::searchNumber(const char *buffer){
   while(*buffer != 0 && *buffer!='-' && (*buffer<'0' || *buffer>'9')){
     buffer++;
   }
@@ -489,7 +489,7 @@ const char *WiFi::searchNumber(const char *buffer){
   *     NONUMERROR if no number found in buffer
   ******
 */
-int WiFi::getNumber(const char *buffer,const char **nextbuffer){
+int WiFi_TL::getNumber(const char *buffer,const char **nextbuffer){
   buffer=searchNumber(buffer); // skip leading characters
 
   // no number given?
@@ -534,7 +534,7 @@ int WiFi::getNumber(const char *buffer,const char **nextbuffer){
   ******
 */
 
-char *WiFi::rc2Str(const int rc){
+char *WiFi_TL::rc2Str(const int rc){
   char *msg=NULL;
 
   switch(rc) {
@@ -566,7 +566,7 @@ char *WiFi::rc2Str(const int rc){
   ******
 */
 
-char *WiFi::ec2Str(const int ec){
+char *WiFi_TL::ec2Str(const int ec){
   char *msg=NULL;
 
   if(ec<=RESPERROR){ // error when receiving response
@@ -608,7 +608,7 @@ char *WiFi::ec2Str(const int ec){
   *    number of active sockets
   ******
 */
-int WiFi::scanSockets(int n1, int n2){
+int WiFi_TL::scanSockets(int n1, int n2){
   char buffer[bufsize];
   int activeSockets=0;
   // handle defaults
@@ -648,7 +648,7 @@ int WiFi::scanSockets(int n1, int n2){
   *    number of closed sockets
   ******
 */
-int WiFi::closeSockets(int n1, int n2){
+int WiFi_TL::closeSockets(int n1, int n2){
   char buffer[bufsize];
   int activeSockets=0;
   // handle defaults
@@ -703,7 +703,7 @@ int WiFi::closeSockets(int n1, int n2){
   *    number of closed sockets
   ******
 */
-int WiFi::closeSocket(byte n){
+int WiFi_TL::closeSocket(byte n){
   return(closeSockets(n,n));
 }
 
@@ -720,7 +720,7 @@ int WiFi::closeSocket(byte n){
   *    number of closed sockets
   ******
 */
-int WiFi::closeSocket(WiFiSocket &s){
+int WiFi_TL::closeSocket(WiFiSocket &s){
   return(closeSocket(s.socket));
 }
 
@@ -737,7 +737,7 @@ int WiFi::closeSocket(WiFiSocket &s){
   *    ---
   ******
 */
-void WiFi::printEc(char *buffer){
+void WiFi_TL::printEc(char *buffer){
   int retcode=evalResponse(buffer);
   if(retcode==RESPERR)
     util::msgln(F("%s"),ec2Str(getNumber(buffer)));
@@ -758,7 +758,7 @@ void WiFi::printEc(char *buffer){
   *    number of closed sockets
   ******
 */
-int WiFi::init(int n1, int n2){
+int WiFi_TL::init(int n1, int n2){
   const int retries=5; // maximum number of retries to start command mode
   bool commandMode=false;
 
@@ -768,9 +768,9 @@ int WiFi::init(int n1, int n2){
   for(i=0; i<10 && !commandMode; i++){
     commandMode=startCommandMode();
     if(commandMode){
-      util::println(F("WiFi::init: start command mode success"));
+      util::println(F("WiFi_TL::init: start command mode success"));
     }else{
-      util::println(F("WiFi::init: start command mode has failed"));
+      util::println(F("WiFi_TL::init: start command mode has failed"));
       delay(1000);
     }
   }
@@ -800,7 +800,7 @@ int WiFi::init(int n1, int n2){
   *    number of the socket
   ******
 */
-int WiFi::openSocket(int protocol, int mode, int timeout, int port){
+int WiFi_TL::openSocket(int protocol, int mode, int timeout, int port){
   char buffer[bufsize];
   cmd("skct",protocol,mode,timeout,port);
   int retcode=getResponse(buffer,bufsize);
@@ -825,7 +825,7 @@ int WiFi::openSocket(int protocol, int mode, int timeout, int port){
   *    number of the socket
   ******
 */
-int WiFi::openSocket(int protocol, int mode, const char *addr, int port){
+int WiFi_TL::openSocket(int protocol, int mode, const char *addr, int port){
   char buffer[bufsize];
 
   cmd("skct",protocol,mode,addr,port);
@@ -851,7 +851,7 @@ int WiFi::openSocket(int protocol, int mode, const char *addr, int port){
   *    <0: Error. Number indicates position in response that has failed
   ******
 */
-int WiFi::evalSocket(byte motherSocket, const char *buffer, WiFiSocket &response){
+int WiFi_TL::evalSocket(byte motherSocket, const char *buffer, WiFiSocket &response){
 
   const char *ptr=buffer; 
 
@@ -901,7 +901,7 @@ int WiFi::evalSocket(byte motherSocket, const char *buffer, WiFiSocket &response
   *    RESPINVALID: no valid message. None of the above
   ******
 */
-int WiFi::getSocket(byte socket, const int mode, WiFiSocket &response){
+int WiFi_TL::getSocket(byte socket, const int mode, WiFiSocket &response){
   char buffer[bufsize];
 
   if(!available()){ // response available?
@@ -945,7 +945,7 @@ int WiFi::getSocket(byte socket, const int mode, WiFiSocket &response){
   *    RESPINVALID: no valid message. None of the above
   ******
 */
-int WiFi::getServerSocket(byte socket, WiFiSocket &response){
+int WiFi_TL::getServerSocket(byte socket, WiFiSocket &response){
   return getSocket(socket,WiFiGetServerSocketResponse,response);
 }
 
@@ -968,7 +968,7 @@ int WiFi::getServerSocket(byte socket, WiFiSocket &response){
   *    RESPINVALID: no valid message. None of the above
   ******
 */
-int WiFi::getClientSocket(byte socket, WiFiSocket &response){
+int WiFi_TL::getClientSocket(byte socket, WiFiSocket &response){
   return getSocket(socket,0,response);
 }
 
@@ -985,7 +985,7 @@ int WiFi::getClientSocket(byte socket, WiFiSocket &response){
   *    n/a
   ******
 */
-void WiFi::printSocket(WiFiSocket *socket){
+void WiFi_TL::printSocket(WiFiSocket *socket){
   util::msgln(F("printSocket"));
   if(socket->mother == socket->socket){
     util::msgln(F("mother socket"));
@@ -1023,7 +1023,7 @@ void WiFi::printSocket(WiFiSocket *socket){
   *    n/a
   ******
 */
-void WiFi::printSocket(WiFiSocket &socket){
+void WiFi_TL::printSocket(WiFiSocket &socket){
   printSocket(&socket);
 }
 
@@ -1044,7 +1044,7 @@ void WiFi::printSocket(WiFiSocket &socket){
   *    <0: error code. See getResponse for details
   ******
 */
-int WiFi::receiveDataPrep(WiFiSocket &socket, const int size){
+int WiFi_TL::receiveDataPrep(WiFiSocket &socket, const int size){
   char buffer[bufsize];
 
   cmd("skrcv",socket.socket,size); // receive data
@@ -1077,7 +1077,7 @@ int WiFi::receiveDataPrep(WiFiSocket &socket, const int size){
   *    <0: error code. See getResponse for details
   ******
 */
-int WiFi::receiveDataPrep(WiFiSocket &socket){
+int WiFi_TL::receiveDataPrep(WiFiSocket &socket){
 
   int size=socket.size;
   if(size>512)
@@ -1105,12 +1105,12 @@ int WiFi::receiveDataPrep(WiFiSocket &socket){
   ******
 */
 
-int WiFi::receiveData(WiFiSocket &socket, char *buffer, const size_t bufsize, const int mode){
+int WiFi_TL::receiveData(WiFiSocket &socket, char *buffer, const size_t bufsize, const int mode){
   int bytes2read = socket.size<bufsize ? socket.size : bufsize;
   int mode_int = mode | WiFiReadRaw;
   int ret=getResponseRaw(buffer,bytes2read,mode_int);
   if(ret==RESPTIMEOUT){
-    util::msgln(F("WiFi::receiveData2Buf: time out"));
+    util::msgln(F("WiFi_TL::receiveData2Buf: time out"));
   }
   if(ret >0) 
     socket.size -= bytes2read;
@@ -1134,11 +1134,11 @@ int WiFi::receiveData(WiFiSocket &socket, char *buffer, const size_t bufsize, co
   *    RESPERR: error when sending command (+ERR)
   *    RESPINVALID: no valid message. None of the above
   *    RESPCANTSEND: WiFi does not allow to send all data at once. Nothing sent.
-  *    also see Wifi.h for error codes (RESP...)
+  *    also see Wifi_TL.h for error codes (RESP...)
    *    <0: error code. See getResponse for details
   ******
 */
-int WiFi::getData(WiFiSocket &socket,  char *buffer, const size_t bufsize, const int mode ){
+int WiFi_TL::getData(WiFiSocket &socket,  char *buffer, const size_t bufsize, const int mode ){
   int bytesReceived=0;
   int n=socket.size<bufsize ? socket.size:bufsize;
   if(n==0){
@@ -1177,11 +1177,11 @@ int WiFi::getData(WiFiSocket &socket,  char *buffer, const size_t bufsize, const
   *    RESPERR: error when sending command (+ERR)
   *    RESPINVALID: no valid message. None of the above
   *    RESPCANTSEND: WiFi does not allow to send all data at once. Nothing sent.
-  *    also see Wifi.h for error codes (RESP...)
+  *    also see Wifi_TL.h for error codes (RESP...)
    *    <0: error code. See getResponse for details
   ******
 */
-int WiFi::sendData(const WiFiSocket &socket, const char *d1, const size_t n1, const char *d2, const size_t n2){
+int WiFi_TL::sendData(const WiFiSocket &socket, const char *d1, const size_t n1, const char *d2, const size_t n2){
 
   char buffer[bufsize];
   int n=n1+n2; // total number of real data to send
@@ -1256,11 +1256,11 @@ int WiFi::sendData(const WiFiSocket &socket, const char *d1, const size_t n1, co
   *    RESPERR: error when sending command (+ERR)
   *    RESPINVALID: no valid message. None of the above
   *    RESPCANTSEND: WiFi does not allow to send all data at once. Nothing sent.
-  *    also see Wifi.h for error codes (RESP...)
+  *    also see Wifi_TL.h for error codes (RESP...)
    *    <0: error code. See getResponse for details
   ******
 */
-int WiFi::sendString(const WiFiSocket &socket, const char *string){
+int WiFi_TL::sendString(const WiFiSocket &socket, const char *string){
   return(sendData(socket,string,strlen(string)));
 }
 
@@ -1280,11 +1280,11 @@ int WiFi::sendString(const WiFiSocket &socket, const char *string){
   *    RESPERR: error when sending command (+ERR)
   *    RESPINVALID: no valid message. None of the above
   *    RESPCANTSEND: WiFi does not allow to send all data at once. Nothing sent.
-  *    also see Wifi.h for error codes (RESP...)
+  *    also see Wifi_TL.h for error codes (RESP...)
    *    <0: error code. See getResponse for details
   ******
 */
-int WiFi::sendStringMulti(const WiFiSocket &socket, const char *string){
+int WiFi_TL::sendStringMulti(const WiFiSocket &socket, const char *string){
   int n1=strlen(sendBuf);
   int n2=strlen(string);
   int n=n1+n2; // total length
@@ -1329,11 +1329,11 @@ int WiFi::sendStringMulti(const WiFiSocket &socket, const char *string){
   *    RESPERR: error when sending command (+ERR)
   *    RESPINVALID: no valid message. None of the above
   *    RESPCANTSEND: WiFi does not allow to send all data at once. Nothing sent.
-  *    also see Wifi.h for error codes (RESP...)
+  *    also see Wifi_TL.h for error codes (RESP...)
    *    <0: error code. See getResponse for details
   ******
 */
-int WiFi::sendStringTerminate(const WiFiSocket &socket){
+int WiFi_TL::sendStringTerminate(const WiFiSocket &socket){
   int n1=strlen(sendBuf);
   int retcode=RESPOK;
 
@@ -1373,11 +1373,11 @@ int WiFi::sendStringTerminate(const WiFiSocket &socket){
   *    RESPERR: error when sending command (+ERR)
   *    RESPINVALID: no valid message. None of the above
   *    RESPCANTSEND: WiFi does not allow to send all data at once. Nothing sent.
-  *    also see Wifi.h for error codes (RESP...)
+  *    also see Wifi_TL.h for error codes (RESP...)
    *    <0: error code. See getResponse for details
   ******
 */
-int WiFi::printResponse(WiFiSocket *socket){
+int WiFi_TL::printResponse(WiFiSocket *socket){
   char buffer[bufsize];
   int bytesReceived=0;
   int retCode=0;
@@ -1410,13 +1410,13 @@ int WiFi::printResponse(WiFiSocket *socket){
   *    n/a
   ******
 */
-int WiFi::printResponse(WiFiSocket &socket){
+int WiFi_TL::printResponse(WiFiSocket &socket){
   printResponse(&socket);
 }
 
 
 #ifdef DEBUG_SEND
-bool WiFi::add2debugbuf(const char c){
+bool WiFi_TL::add2debugbuf(const char c){
   if(debugpointer<debugbuf+debugbuf_size-1){ // need one char for \0
     *debugpointer++=c;
     return true;

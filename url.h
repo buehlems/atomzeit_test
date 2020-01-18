@@ -1,7 +1,7 @@
 #ifndef URL_H
 #define URL_H
 
-#include "WiFi.h"
+#include "WiFi_TL.h"
 
 
 class Url {
@@ -15,7 +15,7 @@ class Url {
   const static int removeSearchString   = 0x02; // remove the search string and re-fill buffer
   const static int resetBuf             = 0x04;
 
-  Url(WiFi *wifi);
+  Url(WiFi_TL *wifi);
   ~Url(void);
   int requestWebPage(const char *server, const char* page=NULL);
   int findString(const char *sstr, int mode=0);
@@ -31,7 +31,7 @@ class Url {
   const static int responseRetries=10; // how many retries for server response?
   const static int responseWait=1000; // how many retries for server response?
 
-  WiFi *wifi;
+  WiFi_TL *wifi;
   WiFiSocket socket;
   const static int respBufSize=32; // size of the buffer to store (part of) the response
   char respBuf[respBufSize+1]; // one byte for \0

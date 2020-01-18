@@ -6,6 +6,10 @@ util::util(void) {
 util::~util(void) {
 }
 
+void util::printASCIIChar(const unsigned char c){
+  util::printf("%c",(c >= 0x20 && c <= 0x7e) ? c : '.');
+}
+
 void util::hexdump(const unsigned char *buf, const unsigned int len, const unsigned int dump_width) {
   #ifdef DEBUG
   const unsigned char *p; // current position
@@ -26,7 +30,7 @@ void util::hexdump(const unsigned char *buf, const unsigned int len, const unsig
 	util::printf(": ");
 	// print again but blank out non-ASCII
 	for (; q < p; q++) {
-	  util::printf("%c",(*q >= 0x20 && *q <= 0x7e) ? *q : '.');
+	  util::printASCIIChar(*q);
 	}
 	util::println("");
 	q = p;
@@ -46,6 +50,23 @@ void util::hexdump(const unsigned char *buf, const unsigned int len, const unsig
     // util::msg("hexdum end");
 
     #endif /* DEBUG */
+}
+
+// print array of with length len. Print hex values or ascii.
+void util::printHexArray(const unsigned char *a, const int len, const bool ascii){
+  int j=0;
+  for(int i=0; i<len; i++, j++){
+    if(ascii){
+      util::printASCIIChar(a[i]);
+    }else{
+      util::printf("%x ",a[i]);
+    }
+    if(j>=16){
+      util::println("");
+      j=0;
+    }
+  }
+  util::println("");
 }
 
 void util::ascdump(unsigned char *buf, unsigned int len) {
@@ -202,9 +223,7 @@ void util::debugln(const __FlashStringHelper *strFlash, unsigned int uint) {
 
 void util::debug(const char c){
   #ifdef DEBUG
-  char d;
-  d=(c >= 0x20 && c <= 0x7e) ? c : '.';
-  util::print(d);
+  util::printASCIIChar(c);
   // util::debug(" ",(unsigned int)c);util::print("  ");
   #endif /* DEBUG */
 }

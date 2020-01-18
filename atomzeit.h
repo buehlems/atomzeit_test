@@ -3,7 +3,7 @@
 
 #include "sun.h" // date
 #include "hms.h" // hm
-#include "WiFi.h" // WiFi
+#include "WiFi_TL.h" // WiFi
 #include "url.h" // url
 
 class Atomzeit {
@@ -13,7 +13,7 @@ class Atomzeit {
   const char NEXTDAY=0x03; // next event is sunrise next day
   const char BEYOND=0x04; // beyond all the events
   const char ERROR=-1; // error, e.g. not initialized
-  Atomzeit(WiFi *_w);
+  Atomzeit(WiFi_TL *_w);
   ~Atomzeit();
   int getWorldTimeFromWeb(const char *timezone);
   int getSunriseSunsetFromWeb(const char* coordinates);

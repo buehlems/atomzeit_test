@@ -39,6 +39,9 @@ class util {
 	static void endlessLoop(); // goes into an endless loop
 	static int strappend(char *str1, const char *str2, const int max);
 	static int strappend(char *str1, const __FlashStringHelper *strFlash2, const int max);
+	static void printASCIIChar(const unsigned char c);
+	static void printHexArray(const unsigned char *a, const int len, const bool ascii=false);
+
     private:
         const static size_t maxstr=128;
 	static void var_printf(const char *fmt, va_list ap);

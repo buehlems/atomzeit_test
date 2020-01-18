@@ -18,7 +18,7 @@
   *    ---
    ******
 */
-Atomzeit::Atomzeit(WiFi *_w){
+Atomzeit::Atomzeit(WiFi_TL *_w){
   url=new Url(_w);
   utc.h=0;
   utc.m=0;

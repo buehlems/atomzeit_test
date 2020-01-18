@@ -16,7 +16,7 @@
   *    ---
    ******
 */
-Url::Url(WiFi *wifi) {
+Url::Url(WiFi_TL *wifi) {
   this->wifi = wifi;
   resetRespBuf();
   invalidateSocket();
